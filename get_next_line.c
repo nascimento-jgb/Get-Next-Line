@@ -5,92 +5,104 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/03 10:10:04 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/06 19:52:33 by jonascim         ###   ########.fr       */
+/*   Created: 2022/11/07 09:11:35 by jonascim          #+#    #+#             */
+/*   Updated: 2022/11/07 14:27:35 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "get_next_line.h"
 
-#define BUFFER_SIZE 10000
-#define FD_SIZE 2058
-
-static int	read_add_line(char **str, char **line, int file, int fd)
+char	*ft_nextline(char *buff)
 {
-	int		count;
+	int		i;
+	int		j;
 	char	*aux;
 
-	if (file < 0)
-		return (-1);
-	else if (file == 0 && !str[fd])
-		return (0);
+	i = 0;
+	while (buff[i] != '\n' && buff[i])
+		buff++;
+	if (!buff[i])
+	{
+		free(buff);
+		return (NULL);
+	}
+	aux = ft_calloc(ft_strlen(buff - i + 1), sizeof(char));
+	j = 0;
+	while(buff)
+		aux[j++] = buff[i++];
+	free(buff);
+	return (aux);
+}
+
+char	*ft_readline(char *buff)
+{
+	char	*line;
+	int		count;
+
 	count = 0;
-	while (*str[count] && *str[count] != '\n')
+	if (buff)
+		return (NULL);
+	while (buff[count] != '\n' && buff)
 		count++;
-	if ((*str)[count] == '\n')
-	{
-		*line = ft_strsub(str, 0, count);
-		aux = ft_strdup(&str[count +1]);
-		ft_free(str, ft_strlen(str));
-		*str = aux;
-		if (!str[0])
-			ft_strdel(str);
-	}
-	else
-	{
-		*line = ft_strdup(*str);
-		ft_strdel(str);
-	}
-	return (1);
+	line = ft_calloc(count + 2, sizeof(char));
+	count = 0;
+	while (buff[count++] != '\n' && buff)
+		line[count] = buff[count];
+	if (buff[count] == '\n' && buff)
+		line[count++] = '\n';
+	return (line);
 }
 
-void	ft_free(char *str, unsigned int len)
+char	*ft_free(char *read_buffer, char *buff)
 {
-	if (!str)
-		return ;
-	while (len--)
-		*str++ = '\0';
-	free(str);
+	char	*aux;
+
+	aux = ft_strjoin(read_buffer, buff);
+	free(read_buffer);
+	return (aux);
 }
 
-void	ft_strdel(void **str)
+char	*read_file(int fd, char *buff)
 {
-	if (!str)
-		return ;
-	else if (str)
-	{
-		free(*str);
-		*str = NULL;
-	}
-}
+	char	*read_buffer;
+	int		bytes;
 
-int	get_next_line(const int fd, char **line)
-{
-	int			file;
-	char		*aux;
-	char		buf[BUFFER_SIZE + 1];
-	static char	str[FD_SIZE];
-
-	if (!line || fd < 0 || fd > FD_SIZE)
-		return (-1);
-	file = read(fd, buf, BUFFER_SIZE);
-	while (file)
+	if (!buff)
+		buff = ft_calloc(1,1);
+	read_buffer = ft_calloc(BUFF_SIZE + 1, sizeof(char));
+	bytes = 1;
+	while (bytes > 0)
 	{
-		buf[file] = '\0';
-		if (!str[fd])
-			str[fd] = ft_strdup(buf);
-		else
+		bytes = read(fd, read_buffer, BUFF_SIZE); //change to buffer_size
+		if (bytes == -1)
 		{
-			aux = ft_strjoin(str[fd], buf);
-			ft_free(str[fd], ft_strlen(str[fd]));
-			str[fd] = aux;
+			free(read_buffer);
+			return (NULL);
 		}
-		if (ft_strchr(str[fd], '\n'))
+		read_buffer[bytes] = 0;
+		buff = ft_free(read_buffer, buff); //join and free
+		if (ft_strchr(read_buffer, '\n'))
 			break ;
-		file = read(fd, buf, BUFFER_SIZE);
 	}
-	return (read_add_line(str, line, file, fd));
+	free(buff);
+	return (read_buffer);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*line;
+	static char	*buff;
+
+	printf("%c",'A');
+	if( fd < 0 || read(fd, 0, 0) < 0 || BUFF_SIZE < 0) // change to buffer_size
+		return (NULL);
+	printf("%c",'A');
+	buff = read_file(fd, buff);
+	printf("%c",'A');
+	if (!buff)
+		return (NULL);
+	printf("%c",'A');
+	line = ft_readline(buff);
+	buff = ft_nextline(buff);
+	return (line);
 }

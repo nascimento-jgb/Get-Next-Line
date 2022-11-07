@@ -6,39 +6,33 @@
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:10:24 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/06 19:52:31 by jonascim         ###   ########.fr       */
+/*   Updated: 2022/11/07 14:19:53 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strdup(const char *str)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		lenght;
-	char	*aux;
+	char	*strjoin;
+	size_t	len;
+	size_t	i;
+	size_t	j;
 
-	lenght = ft_strlen(str);
-	aux = (char *)malloc(sizeof(char) * lenght + 1);
-	if (!aux)
+	if (s1 == NULL || s2 == NULL)
 		return (NULL);
-	lenght = 0;
-	while (str[lenght])
-	{
-		aux[lenght] = str[lenght];
-		lenght++;
-	}
-	aux[lenght] = '\0';
-	return (aux);
-}
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	aux;
-
-	aux = 0;
-	while (str[aux] != '\0')
-		aux++;
-	return (aux);
+	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	strjoin = malloc(len);
+	if (strjoin == NULL)
+		return (NULL);
+	i = 0;
+	while (s1[i++])
+		strjoin[i] = s1[i];
+	j = 0;
+	while (s2[j])
+		strjoin[i++] = s2[j++];
+	strjoin[len] = '\0';
+	return (strjoin);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -54,38 +48,35 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+void	*ft_calloc(size_t count, size_t size)
 {
-	char	*strjoin;
-	size_t	len;
+	void	*aux;
 
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2) + 1;
-	strjoin = malloc(len);
-	if (strjoin == NULL)
-		return (NULL);
-	ft_strlcpy(strjoin, s1, len);
-	ft_strlcat(strjoin, s2, len);
-	return (strjoin);
+	aux = malloc(count * size);
+	if (aux != NULL)
+		ft_bzero(aux, count * size);
+	return (aux);
 }
 
-char	*ft_strsub(char const *s, unsigned int start, size_t len)
+void	ft_bzero(void *s, size_t n)
 {
-	char	*res;
-	size_t	i;
+	unsigned char	*aux;
 
-	if (!s)
-		return (NULL);
-	i = 0;
-	res = (char *)malloc(sizeof(char) * len + 1);
-	if (!res)
-		return (NULL);
-	while (i < len)
+	aux = (unsigned char *)s;
+	while (n > 0)
 	{
-		res[i] = s[start + i];
-		i++;
+		*aux = 0;
+		n--;
+		aux++;
 	}
-	res[i] = '\0';
-	return (res);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	aux;
+
+	aux = 0;
+	while (str[aux] != '\0')
+		aux++;
+	return (aux);
 }
