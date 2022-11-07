@@ -6,7 +6,7 @@
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 09:11:35 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/07 14:27:35 by jonascim         ###   ########.fr       */
+/*   Updated: 2022/11/07 21:23:10 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,16 @@ char	*ft_nextline(char *buff)
 
 	i = 0;
 	while (buff[i] != '\n' && buff[i])
-		buff++;
+		i++;
 	if (!buff[i])
 	{
 		free(buff);
 		return (NULL);
 	}
-	aux = ft_calloc(ft_strlen(buff - i + 1), sizeof(char));
+	aux = ft_calloc((ft_strlen(buff) - i + 1), sizeof(char));
+	i++;
 	j = 0;
-	while(buff)
+	while(buff[i])
 		aux[j++] = buff[i++];
 	free(buff);
 	return (aux);
@@ -40,51 +41,54 @@ char	*ft_readline(char *buff)
 	int		count;
 
 	count = 0;
-	if (buff)
+	if (!buff[count])
 		return (NULL);
-	while (buff[count] != '\n' && buff)
+	while (buff[count] != '\n' && buff[count])
 		count++;
 	line = ft_calloc(count + 2, sizeof(char));
 	count = 0;
-	while (buff[count++] != '\n' && buff)
+	while (buff[count] != '\n' && buff[count])
+	{
 		line[count] = buff[count];
-	if (buff[count] == '\n' && buff)
+		count++;
+	}
+	if (buff[count] == '\n' && buff[count])
 		line[count++] = '\n';
 	return (line);
 }
 
-char	*ft_free(char *read_buffer, char *buff)
+char	*ft_join_n_free(char *buffer, char *rbuff)
 {
 	char	*aux;
 
-	aux = ft_strjoin(read_buffer, buff);
-	free(read_buffer);
+	aux = ft_strjoin(buffer, rbuff);
+	free(buffer);
 	return (aux);
 }
 
-char	*read_file(int fd, char *buff)
+char	*file_read(int fd, char *read_buffer)
 {
-	char	*read_buffer;
+	char	*stash;
 	int		bytes;
 
-	if (!buff)
-		buff = ft_calloc(1,1);
-	read_buffer = ft_calloc(BUFF_SIZE + 1, sizeof(char));
+	if (!read_buffer)
+		read_buffer = ft_calloc(1, 1);
+	stash = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	bytes = 1;
 	while (bytes > 0)
 	{
-		bytes = read(fd, read_buffer, BUFF_SIZE); //change to buffer_size
+		bytes = read(fd, stash, BUFFER_SIZE);
 		if (bytes == -1)
 		{
-			free(read_buffer);
+			free(stash);
 			return (NULL);
 		}
-		read_buffer[bytes] = 0;
-		buff = ft_free(read_buffer, buff); //join and free
-		if (ft_strchr(read_buffer, '\n'))
+		stash[bytes] = 0;
+		read_buffer = ft_join_n_free(read_buffer, stash);
+		if (ft_strchr(stash, '\n'))
 			break ;
 	}
-	free(buff);
+	free(stash);
 	return (read_buffer);
 }
 
@@ -93,15 +97,11 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*buff;
 
-	printf("%c",'A');
-	if( fd < 0 || read(fd, 0, 0) < 0 || BUFF_SIZE < 0) // change to buffer_size
+	if( fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0) // change to buffer_size
 		return (NULL);
-	printf("%c",'A');
-	buff = read_file(fd, buff);
-	printf("%c",'A');
+	buff = file_read(fd, buff);
 	if (!buff)
 		return (NULL);
-	printf("%c",'A');
 	line = ft_readline(buff);
 	buff = ft_nextline(buff);
 	return (line);
