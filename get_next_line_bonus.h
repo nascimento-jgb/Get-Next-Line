@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/03 10:10:50 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/08 13:36:19 by jonascim         ###   ########.fr       */
+/*   Created: 2022/11/08 14:09:29 by jonascim          #+#    #+#             */
+/*   Updated: 2022/11/08 14:43:50 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 50
+#endif
+
+#ifndef OPEN_MAX
+# define OPEN_MAX 20
 #endif
 
 # include <stdlib.h>

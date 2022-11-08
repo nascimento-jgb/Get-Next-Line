@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/07 09:11:35 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/08 13:17:54 by jonascim         ###   ########.fr       */
+/*   Created: 2022/11/08 12:52:30 by jonascim          #+#    #+#             */
+/*   Updated: 2022/11/08 14:43:45 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_nextline(char *buff)
 {
@@ -95,14 +95,14 @@ char	*file_read(int fd, char *stash)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*buff;
+	static char	*buff[OPEN_MAX];
 
 	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buff = file_read(fd, buff);
-	if (!buff)
+	buff[fd] = file_read(fd, buff[fd]);
+	if (!buff[fd])
 		return (NULL);
-	line = ft_readline(buff);
-	buff = ft_nextline(buff);
+	line = ft_readline(buff[fd]);
+	buff[fd] = ft_nextline(buff[fd]);
 	return (line);
 }
