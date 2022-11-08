@@ -6,7 +6,7 @@
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 14:09:29 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/08 15:01:48 by jonascim         ###   ########.fr       */
+/*   Updated: 2022/11/08 16:17:40 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@
 #  define BUFFER_SIZE 50
 # endif
 
-# ifndef OPEN_MAX
-#  define OPEN_MAX 20
-# endif
-
+# include <limits.h>
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/uio.h>
