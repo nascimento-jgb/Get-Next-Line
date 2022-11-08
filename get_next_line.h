@@ -6,18 +6,16 @@
 /*   By: jonascim <jonascim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:10:50 by jonascim          #+#    #+#             */
-/*   Updated: 2022/11/08 13:36:19 by jonascim         ###   ########.fr       */
+/*   Updated: 2022/11/08 15:01:00 by jonascim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 50
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 50
+# endif
 
 # include <stdlib.h>
 # include <sys/types.h>
